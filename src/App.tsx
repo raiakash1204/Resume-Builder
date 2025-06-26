@@ -148,7 +148,7 @@ function App() {
                 <FileDown className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Resume Builder</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Scriba</h1>
                 <p className="text-sm text-gray-600">Create professional LaTeX resumes</p>
               </div>
             </div>
