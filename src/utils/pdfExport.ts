@@ -4,10 +4,10 @@ import { ResumeData } from '../types/resume';
 
 export const exportToPDF = async (elementId: string, filename: string = 'resume.pdf', resumeData?: ResumeData) => {
   if (resumeData) {
-    // Use direct PDF generation for clickable links
+  
     return generateDirectPDF(resumeData, filename);
   } else {
-    // Fallback to canvas method
+    
     return exportCanvasToPDF(elementId, filename);
   }
 };
@@ -26,7 +26,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
   const margin = 20;
   const contentWidth = pageWidth - (margin * 2);
 
-  // Helper functions
+  
   const addText = (text: string, x: number, y: number, options: any = {}) => {
     pdf.setFont('helvetica', options.style || 'normal');
     pdf.setFontSize(options.size || 10);
