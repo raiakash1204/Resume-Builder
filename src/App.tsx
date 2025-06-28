@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FileDown, Download, Eye, Code } from 'lucide-react';
-import { PersonalInfoForm } from './Components/PersonalInfoForm';
-import { EducationForm } from './Components/EducationForm';
-import { ExperienceForm } from './Components/ExperienceForm';
-import { ProjectsForm } from './Components/ProjectsForm';
-import { TechnicalSkillsForm } from './Components/TechnicalSkillsForm';
-import { AwardsForm } from './Components/AwardsForm';
-import { ResumePreview } from './Components/ResumePreview';
+import { PersonalInfoForm } from './components/PersonalInfoForm';
+import { EducationForm } from './components/EducationForm';
+import { ExperienceForm } from './components/ExperienceForm';
+import { ProjectsForm } from './components/ProjectsForm';
+import { TechnicalSkillsForm } from './components/TechnicalSkillsForm';
+import { AwardsForm } from './components/AwardsForm';
+import { LatexEditor } from './components/LatexEditor';
+import { ResumePreview } from './components/ResumePreview';
 import { ResumeData } from './types/resume';
 import { generateLatexResume } from './utils/latexGenerator';
 import { exportToPDF, downloadLatexFile } from './utils/pdfExport';
@@ -50,7 +51,8 @@ const tabs = [
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
   { id: 'skills', label: 'Skills' },
-  { id: 'awards', label: 'Awards' }
+  { id: 'awards', label: 'Awards' },
+  { id: 'latex', label: 'LaTeX Editor' }
 ];
 
 function App() {
@@ -132,6 +134,13 @@ function App() {
             onChange={(data) => setResumeData(prev => ({ ...prev, awards: data }))}
           />
         );
+      case 'latex':
+        return (
+          <LatexEditor
+            data={resumeData}
+            onChange={setResumeData}
+          />
+        );
       default:
         return null;
     }
@@ -148,7 +157,7 @@ function App() {
                 <FileDown className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Scriba</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Resume Builder</h1>
                 <p className="text-sm text-gray-600">Create professional LaTeX resumes</p>
               </div>
             </div>
