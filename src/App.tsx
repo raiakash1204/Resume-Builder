@@ -176,8 +176,8 @@ function App() {
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3 animate-fade-in">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200">
+            <div className="flex items-center space-x-3">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg shadow-lg">
                 <FileDown className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -188,16 +188,8 @@ function App() {
             
             <div className="flex items-center space-x-3">
               <button
-                onClick={toggleTheme}
-                className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-105 transform"
-                title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-              >
-                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
-              
-              <button
                 onClick={() => setShowPreview(!showPreview)}
-                className="flex items-center space-x-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-105 transform"
+                className="flex items-center space-x-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
               >
                 <Eye className="w-4 h-4" />
                 <span className="hidden sm:inline">{showPreview ? 'Hide' : 'Show'} Preview</span>
@@ -205,7 +197,7 @@ function App() {
               
               <button
                 onClick={handleReset}
-                className="p-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 hover:scale-105 transform border border-red-200 dark:border-red-800"
+                className="p-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 border border-red-200 dark:border-red-800"
                 title="Reset all data"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -213,7 +205,7 @@ function App() {
               
               <button
                 onClick={handleDownloadLatex}
-                className="flex items-center space-x-1 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-all duration-200 hover:scale-105 transform border border-indigo-200 dark:border-indigo-800"
+                className="flex items-center space-x-1 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-all duration-200 border border-indigo-200 dark:border-indigo-800"
               >
                 <Code className="w-4 h-4" />
                 <span className="hidden sm:inline">Download LaTeX</span>
@@ -221,10 +213,18 @@ function App() {
               
               <button
                 onClick={handleExportPDF}
-                className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 hover:scale-105 transform shadow-lg hover:shadow-xl"
+                className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Download className="w-4 h-4" />
                 <span className="hidden sm:inline">Export PDF</span>
+              </button>
+              
+              <button
+                onClick={toggleTheme}
+                className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+                title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
             </div>
           </div>
@@ -232,14 +232,14 @@ function App() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className={`grid ${showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-8 transition-all duration-500 ease-in-out`}>
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
+        <div className={`grid transition-all duration-700 ease-in-out ${showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-8`}>
+          <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-700 ease-in-out ${showPreview ? '' : 'max-w-4xl mx-auto'}`}>
             <div className="flex flex-wrap border-b border-gray-200 dark:border-gray-700 mb-6">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all duration-200 transform hover:scale-105 ${
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all duration-200 ${
                     activeTab === tab.id
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-b-2 border-blue-600 shadow-md'
                       : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700'
@@ -250,27 +250,29 @@ function App() {
               ))}
             </div>
 
-            <div className="min-h-[500px] animate-fade-in">
+            <div className="min-h-[500px]">
               {renderForm()}
             </div>
           </div>
 
-          {showPreview && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 animate-slide-in">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Resume Preview</h2>
-                <div className="text-sm text-gray-500 dark:text-gray-400 animate-pulse">
-                  Live preview updates automatically
-                </div>
-              </div>
-              
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-300 hover:border-blue-300 dark:hover:border-blue-600">
-                <div id="resume-preview" className="transform scale-75 origin-top-left w-[133.33%] transition-transform duration-300 hover:scale-[0.76]">
-                  <ResumePreview data={resumeData} />
-                </div>
+          <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-700 ease-in-out transform ${
+            showPreview 
+              ? 'opacity-100 translate-x-0 scale-100' 
+              : 'opacity-0 translate-x-full scale-95 lg:hidden'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Resume Preview</h2>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Live preview updates automatically
               </div>
             </div>
-          )}
+            
+            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+              <div id="resume-preview" className="transform scale-75 origin-top-left w-[133.33%]">
+                <ResumePreview data={resumeData} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -54,26 +54,28 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Code2 className="w-5 h-5 text-blue-600" />
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+            <Code2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          </div>
           <h2 className="text-xl font-semibold text-gray-800 dark:text-white">LaTeX Editor</h2>
         </div>
         
         <div className="flex items-center space-x-2">
           {isEditing && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 animate-slide-in">
               <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">Unsaved changes</span>
               <button
                 onClick={handleResetChanges}
-                className="px-3 py-1 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+                className="px-3 py-1 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-all duration-200 hover:scale-105 transform"
               >
                 Reset
               </button>
               <button
                 onClick={handleApplyChanges}
-                className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-all duration-200 hover:scale-105 transform shadow-md hover:shadow-lg"
               >
                 Apply Changes
               </button>
@@ -82,7 +84,7 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
           
           <button
             onClick={handleRefreshFromData}
-            className="flex items-center space-x-1 px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="flex items-center space-x-1 px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all duration-200 hover:scale-105 transform shadow-md hover:shadow-lg"
             title="Refresh LaTeX from form data"
           >
             <RefreshCw className="w-4 h-4" />
@@ -92,13 +94,13 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
       </div>
 
       {parseError && (
-        <div className="flex items-center space-x-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+        <div className="flex items-center space-x-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md animate-bounce-in">
           <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
           <span className="text-red-700 dark:text-red-300">{parseError}</span>
         </div>
       )}
 
-      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
         <div className="mb-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             LaTeX Source Code
@@ -111,7 +113,7 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
         <textarea
           value={latexContent}
           onChange={(e) => handleLatexChange(e.target.value)}
-          className={`w-full h-96 px-3 py-2 font-mono text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
+          className={`w-full h-96 px-3 py-2 font-mono text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 ${
             isEditing 
               ? 'border-orange-300 dark:border-orange-600 bg-orange-50 dark:bg-orange-900/20' 
               : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
@@ -121,7 +123,7 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
         />
       </div>
 
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 transition-all duration-300 hover:shadow-md">
         <h3 className="font-medium text-blue-900 dark:text-blue-300 mb-2">LaTeX Editor Tips:</h3>
         <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
           <li>• Edit the LaTeX code directly to make advanced formatting changes</li>
