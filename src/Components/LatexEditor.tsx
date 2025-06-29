@@ -14,7 +14,6 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [parseError, setParseError] = useState<string | null>(null);
 
-  // Generate LaTeX from data when data changes (but not when we're editing)
   useEffect(() => {
     if (!isEditing) {
       const newLatex = generateLatexResume(data);
@@ -59,13 +58,13 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Code2 className="w-5 h-5 text-blue-600" />
-          <h2 className="text-xl font-semibold text-gray-800">LaTeX Editor</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">LaTeX Editor</h2>
         </div>
         
         <div className="flex items-center space-x-2">
           {isEditing && (
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-orange-600 font-medium">Unsaved changes</span>
+              <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">Unsaved changes</span>
               <button
                 onClick={handleResetChanges}
                 className="px-3 py-1 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
@@ -93,18 +92,18 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
       </div>
 
       {parseError && (
-        <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-md">
-          <AlertCircle className="w-5 h-5 text-red-600" />
-          <span className="text-red-700">{parseError}</span>
+        <div className="flex items-center space-x-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          <span className="text-red-700 dark:text-red-300">{parseError}</span>
         </div>
       )}
 
-      <div className="bg-gray-50 rounded-lg p-4">
+      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
         <div className="mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             LaTeX Source Code
           </label>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Edit the LaTeX code directly. Changes will be applied to the form when you click "Apply Changes".
           </p>
         </div>
@@ -113,16 +112,18 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
           value={latexContent}
           onChange={(e) => handleLatexChange(e.target.value)}
           className={`w-full h-96 px-3 py-2 font-mono text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
-            isEditing ? 'border-orange-300 bg-orange-50' : 'border-gray-300 bg-white'
-          }`}
+            isEditing 
+              ? 'border-orange-300 dark:border-orange-600 bg-orange-50 dark:bg-orange-900/20' 
+              : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+          } text-gray-900 dark:text-white`}
           placeholder="LaTeX code will appear here..."
           spellCheck={false}
         />
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-medium text-blue-900 mb-2">LaTeX Editor Tips:</h3>
-        <ul className="text-sm text-blue-800 space-y-1">
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <h3 className="font-medium text-blue-900 dark:text-blue-300 mb-2">LaTeX Editor Tips:</h3>
+        <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
           <li>• Edit the LaTeX code directly to make advanced formatting changes</li>
           <li>• Changes are bidirectional - editing here updates the form, and vice versa</li>
           <li>• Use "Apply Changes" to sync your LaTeX edits back to the form</li>

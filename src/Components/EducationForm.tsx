@@ -34,7 +34,7 @@ export const EducationForm: React.FC<EducationFormProps> = ({ data, onChange }) 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <GraduationCap className="w-5 h-5 text-blue-600" />
-          <h2 className="text-xl font-semibold text-gray-800">Education</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Education</h2>
         </div>
         <button
           onClick={addEducation}
@@ -46,9 +46,9 @@ export const EducationForm: React.FC<EducationFormProps> = ({ data, onChange }) 
       </div>
 
       {data.map((edu, index) => (
-        <div key={edu.id} className="border border-gray-200 rounded-lg p-4 space-y-4">
+        <div key={edu.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 space-y-4 bg-gray-50 dark:bg-gray-700">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-gray-800">Education #{index + 1}</h3>
+            <h3 className="font-medium text-gray-800 dark:text-white">Education #{index + 1}</h3>
             {data.length > 1 && (
               <button
                 onClick={() => removeEducation(edu.id)}
@@ -61,56 +61,56 @@ export const EducationForm: React.FC<EducationFormProps> = ({ data, onChange }) 
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Institution Name *
               </label>
               <input
                 type="text"
                 value={edu.institution}
                 onChange={(e) => updateEducation(edu.id, 'institution', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="University/College Name"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Location *
               </label>
               <input
                 type="text"
                 value={edu.location}
                 onChange={(e) => updateEducation(edu.id, 'location', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="City, State"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Degree *
               </label>
               <input
                 type="text"
                 value={edu.degree}
                 onChange={(e) => updateEducation(edu.id, 'degree', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="Bachelor of Science in Computer Science"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Duration *
               </label>
               <input
                 type="text"
                 value={edu.duration}
                 onChange={(e) => updateEducation(edu.id, 'duration', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="2020-2024"
                 required
               />

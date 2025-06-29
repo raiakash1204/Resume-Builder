@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FileDown, Download, Eye, Code } from 'lucide-react';
-import { PersonalInfoForm } from './Components/PersonalInfoForm';
-import { EducationForm } from './Components/EducationForm';
-import { ExperienceForm } from './Components/ExperienceForm';
-import { ProjectsForm } from './Components/ProjectsForm';
-import { TechnicalSkillsForm } from './Components/TechnicalSkillsForm';
-import { AwardsForm } from './Components/AwardsForm';
-import { LatexEditor } from './Components/LatexEditor';
-import { ResumePreview } from './Components/ResumePreview';
+import { FileDown, Download, Eye, Code, RotateCcw, Moon, Sun } from 'lucide-react';
+import { PersonalInfoForm } from './components/PersonalInfoForm';
+import { EducationForm } from './components/EducationForm';
+import { ExperienceForm } from './components/ExperienceForm';
+import { ProjectsForm } from './components/ProjectsForm';
+import { TechnicalSkillsForm } from './components/TechnicalSkillsForm';
+import { AwardsForm } from './components/AwardsForm';
+import { LatexEditor } from './components/LatexEditor';
+import { ResumePreview } from './components/ResumePreview';
 import { ResumeData } from './types/resume';
 import { generateLatexResume } from './utils/latexGenerator';
 import { exportToPDF, downloadLatexFile } from './utils/pdfExport';
@@ -59,10 +59,12 @@ function App() {
   const [resumeData, setResumeData] = useState<ResumeData>(initialData);
   const [activeTab, setActiveTab] = useState('personal');
   const [showPreview, setShowPreview] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Load data from localStorage on component mount
   useEffect(() => {
     const savedData = localStorage.getItem('resumeBuilderData');
+    const savedTheme = localStorage.getItem('resumeBuilderTheme');
+    
     if (savedData) {
       try {
         setResumeData(JSON.parse(savedData));
@@ -70,12 +72,24 @@ function App() {
         console.error('Error loading data from localStorage:', error);
       }
     }
+    
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    }
   }, []);
 
-  // Save data to localStorage whenever resumeData changes
   useEffect(() => {
     localStorage.setItem('resumeBuilderData', JSON.stringify(resumeData));
   }, [resumeData]);
+
+  useEffect(() => {
+    localStorage.setItem('resumeBuilderTheme', isDarkMode ? 'dark' : 'light');
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const handleExportPDF = async () => {
     try {
@@ -88,6 +102,17 @@ function App() {
   const handleDownloadLatex = () => {
     const latexContent = generateLatexResume(resumeData);
     downloadLatexFile(latexContent, `${resumeData.personalInfo.name || 'resume'}.tex`);
+  };
+
+  const handleReset = () => {
+    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+      setResumeData(initialData);
+      localStorage.removeItem('resumeBuilderData');
+    }
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
   };
 
   const renderForm = () => {
@@ -147,65 +172,77 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 transition-all duration-500 ease-in-out">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div className="bg-blue-600 p-2 rounded-lg">
+            <div className="flex items-center space-x-3 animate-fade-in">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200">
                 <FileDown className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Resume Builder</h1>
-                <p className="text-sm text-gray-600">Create professional LaTeX resumes</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Resume Builder</h1>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Create professional LaTeX resumes</p>
               </div>
             </div>
             
             <div className="flex items-center space-x-3">
               <button
+                onClick={toggleTheme}
+                className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-105 transform"
+                title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+              
+              <button
                 onClick={() => setShowPreview(!showPreview)}
-                className="flex items-center space-x-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                className="flex items-center space-x-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-105 transform"
               >
                 <Eye className="w-4 h-4" />
-                <span>{showPreview ? 'Hide' : 'Show'} Preview</span>
+                <span className="hidden sm:inline">{showPreview ? 'Hide' : 'Show'} Preview</span>
+              </button>
+              
+              <button
+                onClick={handleReset}
+                className="p-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 hover:scale-105 transform border border-red-200 dark:border-red-800"
+                title="Reset all data"
+              >
+                <RotateCcw className="w-4 h-4" />
               </button>
               
               <button
                 onClick={handleDownloadLatex}
-                className="flex items-center space-x-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="flex items-center space-x-1 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-all duration-200 hover:scale-105 transform border border-indigo-200 dark:border-indigo-800"
               >
                 <Code className="w-4 h-4" />
-                <span>Download LaTeX</span>
+                <span className="hidden sm:inline">Download LaTeX</span>
               </button>
               
               <button
                 onClick={handleExportPDF}
-                className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center space-x-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 hover:scale-105 transform shadow-lg hover:shadow-xl"
               >
                 <Download className="w-4 h-4" />
-                <span>Export PDF</span>
+                <span className="hidden sm:inline">Export PDF</span>
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className={`grid ${showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {/* Form Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            {/* Tabs */}
-            <div className="flex flex-wrap border-b border-gray-200 mb-6">
+        <div className={`grid ${showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-8 transition-all duration-500 ease-in-out`}>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
+            <div className="flex flex-wrap border-b border-gray-200 dark:border-gray-700 mb-6">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all duration-200 transform hover:scale-105 ${
                     activeTab === tab.id
-                      ? 'bg-blue-600 text-white border-b-2 border-blue-600'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-b-2 border-blue-600 shadow-md'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   {tab.label}
@@ -213,24 +250,22 @@ function App() {
               ))}
             </div>
 
-            {/* Form Content */}
-            <div className="min-h-[500px]">
+            <div className="min-h-[500px] animate-fade-in">
               {renderForm()}
             </div>
           </div>
 
-          {/* Preview Section */}
           {showPreview && (
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 animate-slide-in">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-800">Resume Preview</h2>
-                <div className="text-sm text-gray-500">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Resume Preview</h2>
+                <div className="text-sm text-gray-500 dark:text-gray-400 animate-pulse">
                   Live preview updates automatically
                 </div>
               </div>
               
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <div id="resume-preview" className="transform scale-75 origin-top-left w-[133.33%]">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-300 hover:border-blue-300 dark:hover:border-blue-600">
+                <div id="resume-preview" className="transform scale-75 origin-top-left w-[133.33%] transition-transform duration-300 hover:scale-[0.76]">
                   <ResumePreview data={resumeData} />
                 </div>
               </div>

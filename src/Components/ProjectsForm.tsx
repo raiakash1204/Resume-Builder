@@ -59,7 +59,7 @@ export const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, onChange }) =>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Code className="w-5 h-5 text-blue-600" />
-          <h2 className="text-xl font-semibold text-gray-800">Projects</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Projects</h2>
         </div>
         <button
           onClick={addProject}
@@ -71,9 +71,9 @@ export const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, onChange }) =>
       </div>
 
       {data.map((project, index) => (
-        <div key={project.id} className="border border-gray-200 rounded-lg p-4 space-y-4">
+        <div key={project.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 space-y-4 bg-gray-50 dark:bg-gray-700">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-gray-800">Project #{index + 1}</h3>
+            <h3 className="font-medium text-gray-800 dark:text-white">Project #{index + 1}</h3>
             {data.length > 1 && (
               <button
                 onClick={() => removeProject(project.id)}
@@ -86,28 +86,28 @@ export const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, onChange }) =>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Project Name *
               </label>
               <input
                 type="text"
                 value={project.name}
                 onChange={(e) => updateProject(project.id, 'name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="AI Math Solver"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Duration *
               </label>
               <input
                 type="text"
                 value={project.duration}
                 onChange={(e) => updateProject(project.id, 'duration', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 placeholder="February 2025 - March 2025"
                 required
               />
@@ -115,14 +115,14 @@ export const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, onChange }) =>
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Technologies Used *
             </label>
             <input
               type="text"
               value={project.technologies}
               onChange={(e) => updateProject(project.id, 'technologies', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               placeholder="React, Node.js, MongoDB, Express"
               required
             />
@@ -130,7 +130,7 @@ export const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, onChange }) =>
           
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Project Description/Features
               </label>
               <button
@@ -146,7 +146,7 @@ export const ProjectsForm: React.FC<ProjectsFormProps> = ({ data, onChange }) =>
                 <textarea
                   value={bullet}
                   onChange={(e) => updateBullet(project.id, bulletIndex, e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   placeholder="Describe project features, achievements, or technical details..."
                   rows={2}
                 />
