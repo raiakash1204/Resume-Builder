@@ -1,8 +1,18 @@
 import { ResumeData } from '../types/resume';
 
-export const generateLatexResume = (data: ResumeData): string => {
-  const { personalInfo, education, experience, projects, technicalSkills, awards } = data;
+// Import the template as a string
+const getTemplate = async (): Promise<string> => {
+  try {
+    const response = await fetch('/src/templates/resume-template.tex');
+    return await response.text();
+  } catch (error) {
+    console.error('Error loading template:', error);
+    // Fallback template if file can't be loaded
+    return getDefaultTemplate();
+  }
+};
 
+const getDefaultTemplate = (): string => {
   return `%-------------------------
 % Resume in Latex
 % Author : Jake Gutierrez
@@ -24,19 +34,6 @@ export const generateLatexResume = (data: ResumeData): string => {
 \\usepackage[english]{babel}
 \\usepackage{tabularx}
 \\input{glyphtounicode}
-
-
-%----------FONT OPTIONS----------
-% sans-serif
-% \\usepackage[sfdefault]{FiraSans}
-% \\usepackage[sfdefault]{roboto}
-% \\usepackage[sfdefault]{noto-sans}
-% \\usepackage[default]{sourcesanspro}
-
-% serif
-% \\usepackage{CormorantGaramond}
-% \\usepackage{charter}
-
 
 \\pagestyle{fancy}
 \\fancyhf{} % clear all header and footer fields
@@ -107,19 +104,94 @@ export const generateLatexResume = (data: ResumeData): string => {
 %-------------------------------------------
 %%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \\begin{document}
 
 %----------HEADING----------
 \\begin{center}
-    \\textbf{\\Huge \\scshape ${personalInfo.name}} \\\\ \\vspace{1pt}
-    \\small ${personalInfo.phone} $|$ \\href{mailto:${personalInfo.email}}{\\underline{${personalInfo.email}}} $|$ 
-    ${personalInfo.linkedin ? `\\href{${personalInfo.linkedin}}{\\underline{LinkedIn}} $|$` : ''}
-    ${personalInfo.github ? `\\href{${personalInfo.github}}{\\underline{GitHub}} $|$` : ''}
-    ${personalInfo.portfolio ? `\\href{${personalInfo.portfolio}}{\\underline{Portfolio}}` : ''}
+    \\textbf{\\Huge \\scshape {{FULL_NAME}}} \\\\ \\vspace{1pt}
+    \\small {{PHONE}} $|$ \\href{mailto:{{EMAIL}}}{\\underline{{{EMAIL}}}} $|$ 
+    {{LINKEDIN_LINK}}
+    {{GITHUB_LINK}}
+    {{PORTFOLIO_LINK}}
 \\end{center}
 
+{{EDUCATION_SECTION}}
 
+{{EXPERIENCE_SECTION}}
+
+{{PROJECTS_SECTION}}
+
+%
+%-----------PROGRAMMING SKILLS-----------
+\\section{Technical Skills}
+ \\begin{itemize}[leftmargin=0.15in, label={}]
+    \\small{\\item{
+     \\textbf{Languages}{: {{LANGUAGES}}} \\\\
+     \\textbf{Frameworks}{: {{FRAMEWORKS}}} \\\\
+     \\textbf{Developer Tools}{: {{TOOLS}}} \\\\
+     {{SPECIALIZED_LINE}}
+    }}
+ \\end{itemize}
+
+{{AWARDS_SECTION}}
+
+%-------------------------------------------
+\\end{document}`;
+};
+
+export const generateLatexResume = async (data: ResumeData): Promise<string> => {
+  const { personalInfo, education, experience, projects, technicalSkills, awards } = data;
+  
+  let template = getDefaultTemplate();
+  
+  try {
+    template = await getTemplate();
+  } catch (error) {
+    console.warn('Using fallback template');
+  }
+
+  // Generate sections
+  const educationSection = generateEducationSection(education);
+  const experienceSection = generateExperienceSection(experience);
+  const projectsSection = generateProjectsSection(projects);
+  const awardsSection = generateAwardsSection(awards);
+
+  // Generate contact links
+  const linkedinLink = personalInfo.linkedin ? 
+    `\\href{${personalInfo.linkedin}}{\\underline{LinkedIn}} $|$` : '';
+  const githubLink = personalInfo.github ? 
+    `\\href{${personalInfo.github}}{\\underline{GitHub}}${personalInfo.portfolio ? ' $|$' : ''}` : '';
+  const portfolioLink = personalInfo.portfolio ? 
+    `\\href{${personalInfo.portfolio}}{\\underline{Portfolio}}` : '';
+
+  // Generate specialized software line
+  const specializedLine = technicalSkills.specialized ? 
+    `\\textbf{Specialized Software}{: ${technicalSkills.specialized}} \\\\` : '';
+
+  // Replace placeholders
+  let result = template
+    .replace(/{{FULL_NAME}}/g, personalInfo.name || 'Your Name')
+    .replace(/{{PHONE}}/g, personalInfo.phone || '')
+    .replace(/{{EMAIL}}/g, personalInfo.email || '')
+    .replace(/{{LINKEDIN_LINK}}/g, linkedinLink)
+    .replace(/{{GITHUB_LINK}}/g, githubLink)
+    .replace(/{{PORTFOLIO_LINK}}/g, portfolioLink)
+    .replace(/{{EDUCATION_SECTION}}/g, educationSection)
+    .replace(/{{EXPERIENCE_SECTION}}/g, experienceSection)
+    .replace(/{{PROJECTS_SECTION}}/g, projectsSection)
+    .replace(/{{LANGUAGES}}/g, technicalSkills.languages || '')
+    .replace(/{{FRAMEWORKS}}/g, technicalSkills.frameworks || '')
+    .replace(/{{TOOLS}}/g, technicalSkills.tools || '')
+    .replace(/{{SPECIALIZED_LINE}}/g, specializedLine)
+    .replace(/{{AWARDS_SECTION}}/g, awardsSection);
+
+  return result;
+};
+
+const generateEducationSection = (education: any[]): string => {
+  if (!education.length || !education[0].institution) return '';
+  
+  return `
 %-----------EDUCATION-----------
 \\section{Education}
   \\resumeSubHeadingListStart
@@ -127,8 +199,13 @@ ${education.map(edu => `    \\resumeSubheading
       {${edu.institution}}{${edu.location}}
       {${edu.degree}}{${edu.duration}}`).join('\n')}
   \\resumeSubHeadingListEnd
+`;
+};
 
-${experience.length > 0 ? `
+const generateExperienceSection = (experience: any[]): string => {
+  if (!experience.length) return '';
+  
+  return `
 %-----------EXPERIENCE-----------
 \\section{Experience}
   \\resumeSubHeadingListStart
@@ -137,40 +214,81 @@ ${experience.map(exp => `
       {${exp.position}}{${exp.duration}}
       {${exp.company}}{${exp.location}}
       \\resumeItemListStart
-${exp.bullets.map(bullet => `        \\resumeItem{${bullet}}`).join('\n')}
+${exp.bullets.filter((bullet: string) => bullet.trim()).map((bullet: string) => `        \\resumeItem{${bullet}}`).join('\n')}
       \\resumeItemListEnd`).join('')}
   \\resumeSubHeadingListEnd
+`;
+};
 
-` : ''}
+const generateProjectsSection = (projects: any[]): string => {
+  if (!projects.length || !projects[0].name) return '';
+  
+  return `
 %-----------PROJECTS-----------
 \\section{Projects}
     \\resumeSubHeadingListStart
 ${projects.map(project => `      \\resumeProjectHeading
           {\\textbf{${project.name}} $|$ \\emph{${project.technologies}}}{${project.duration}}
           \\resumeItemListStart
-${project.bullets.map(bullet => `            \\resumeItem{${bullet}}`).join('\n')}
+${project.bullets.filter((bullet: string) => bullet.trim()).map((bullet: string) => `            \\resumeItem{${bullet}}`).join('\n')}
           \\resumeItemListEnd`).join('\n')}
     \\resumeSubHeadingListEnd
+`;
+};
 
-%-----------PROGRAMMING SKILLS-----------
-\\section{Technical Skills}
- \\begin{itemize}[leftmargin=0.15in, label={}]
-    \\small{\\item{
-     \\textbf{Languages}{: ${technicalSkills.languages}} \\\\
-     \\textbf{Frameworks \\& Libraries}{: ${technicalSkills.frameworks}} \\\\
-     \\textbf{Developer Tools}{: ${technicalSkills.tools}} \\\\
-     \\textbf{Specialised Software}{: ${technicalSkills.specialized}} }}
- \\end{itemize}
-
-${awards.length > 0 ? `
+const generateAwardsSection = (awards: any[]): string => {
+  if (!awards.length) return '';
+  
+  return `
 %-----Awards And HONORS
 \\section{Awards and Honors}
  \\begin{itemize}[leftmargin=0.15in, label={}]
     \\small{\\item{
-${awards.map(award => `     \\textbf{${award.title}}{${award.description}} \\\\`).join('\n')}
+${awards.map(award => `     \\textbf{${award.title}}{: ${award.description}} \\\\`).join('\n')}
     }}
  \\end{itemize}
-` : ''}
-%-------------------------------------------
-\\end{document}`;
+`;
+};
+
+// For backward compatibility, export a synchronous version that uses the default template
+export const generateLatexResumeSync = (data: ResumeData): string => {
+  const template = getDefaultTemplate();
+  const { personalInfo, education, experience, projects, technicalSkills, awards } = data;
+
+  // Generate sections using the same functions
+  const educationSection = generateEducationSection(education);
+  const experienceSection = generateExperienceSection(experience);
+  const projectsSection = generateProjectsSection(projects);
+  const awardsSection = generateAwardsSection(awards);
+
+  // Generate contact links
+  const linkedinLink = personalInfo.linkedin ? 
+    `\\href{${personalInfo.linkedin}}{\\underline{LinkedIn}} $|$` : '';
+  const githubLink = personalInfo.github ? 
+    `\\href{${personalInfo.github}}{\\underline{GitHub}}${personalInfo.portfolio ? ' $|$' : ''}` : '';
+  const portfolioLink = personalInfo.portfolio ? 
+    `\\href{${personalInfo.portfolio}}{\\underline{Portfolio}}` : '';
+
+  // Generate specialized software line
+  const specializedLine = technicalSkills.specialized ? 
+    `\\textbf{Specialized Software}{: ${technicalSkills.specialized}} \\\\` : '';
+
+  // Replace placeholders
+  let result = template
+    .replace(/{{FULL_NAME}}/g, personalInfo.name || 'Your Name')
+    .replace(/{{PHONE}}/g, personalInfo.phone || '')
+    .replace(/{{EMAIL}}/g, personalInfo.email || '')
+    .replace(/{{LINKEDIN_LINK}}/g, linkedinLink)
+    .replace(/{{GITHUB_LINK}}/g, githubLink)
+    .replace(/{{PORTFOLIO_LINK}}/g, portfolioLink)
+    .replace(/{{EDUCATION_SECTION}}/g, educationSection)
+    .replace(/{{EXPERIENCE_SECTION}}/g, experienceSection)
+    .replace(/{{PROJECTS_SECTION}}/g, projectsSection)
+    .replace(/{{LANGUAGES}}/g, technicalSkills.languages || '')
+    .replace(/{{FRAMEWORKS}}/g, technicalSkills.frameworks || '')
+    .replace(/{{TOOLS}}/g, technicalSkills.tools || '')
+    .replace(/{{SPECIALIZED_LINE}}/g, specializedLine)
+    .replace(/{{AWARDS_SECTION}}/g, awardsSection);
+
+  return result;
 };

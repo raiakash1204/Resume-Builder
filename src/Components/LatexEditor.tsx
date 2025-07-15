@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Code2, RefreshCw, AlertCircle } from 'lucide-react';
 import { ResumeData } from '../types/resume';
-import { generateLatexResume } from '../utils/latexGenerator';
+import { generateLatexResumeSync } from '../utils/latexGenerator';
 import { parseLatexToResumeData } from '../utils/latexParser';
 
 interface LatexEditorProps {
@@ -16,7 +16,7 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
 
   useEffect(() => {
     if (!isEditing) {
-      const newLatex = generateLatexResume(data);
+      const newLatex = generateLatexResumeSync(data);
       setLatexContent(newLatex);
     }
   }, [data, isEditing]);
@@ -40,14 +40,14 @@ export const LatexEditor: React.FC<LatexEditorProps> = ({ data, onChange }) => {
   };
 
   const handleResetChanges = () => {
-    const originalLatex = generateLatexResume(data);
+    const originalLatex = generateLatexResumeSync(data);
     setLatexContent(originalLatex);
     setIsEditing(false);
     setParseError(null);
   };
 
   const handleRefreshFromData = () => {
-    const newLatex = generateLatexResume(data);
+    const newLatex = generateLatexResumeSync(data);
     setLatexContent(newLatex);
     setIsEditing(false);
     setParseError(null);

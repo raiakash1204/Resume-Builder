@@ -9,7 +9,7 @@ import { AwardsForm } from './Components/AwardsForm';
 import { LatexEditor } from './Components/LatexEditor';
 import { ResumePreview } from './Components/ResumePreview';
 import { ResumeData } from './types/resume';
-import { generateLatexResume } from './utils/latexGenerator';
+import { generateLatexResumeSync } from './utils/latexGenerator';
 import { exportToPDF, downloadLatexFile } from './utils/pdfExport';
 
 const initialData: ResumeData = {
@@ -100,7 +100,7 @@ function App() {
   };
 
   const handleDownloadLatex = () => {
-    const latexContent = generateLatexResume(resumeData);
+    const latexContent = generateLatexResumeSync(resumeData);
     downloadLatexFile(latexContent, `${resumeData.personalInfo.name || 'resume'}.tex`);
   };
 

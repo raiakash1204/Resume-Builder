@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ResumeData } from '../types/resume';
+import { generateLatexResumeSync } from './latexGenerator';
 
 export const exportToPDF = async (elementId: string, filename: string = 'resume.pdf', resumeData?: ResumeData) => {
   if (resumeData) {
@@ -333,6 +334,12 @@ const exportCanvasToPDF = async (elementId: string, filename: string) => {
 };
 
 export const downloadLatexFile = (latexContent: string, filename: string = 'resume.tex') => {
+  // If no content provided, generate from current data
+  if (!latexContent) {
+    console.warn('No LaTeX content provided to downloadLatexFile');
+    return;
+  }
+  
   const blob = new Blob([latexContent], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
