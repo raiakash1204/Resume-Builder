@@ -23,10 +23,11 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
   let yPosition = 25;
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = 20;
+  const margin = 10;
   const contentWidth = pageWidth - (margin * 2);
   const lineHeight = 5;
   const sectionSpacing = 8;
+  const font = "helvetica" //options are times, courier, helvetica because jspdf supports only these three fonts.
 
   const checkPageBreak = (requiredSpace: number) => {
     if (yPosition + requiredSpace > pageHeight - margin) {
@@ -37,7 +38,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
 
   const addSectionHeader = (title: string) => {
     checkPageBreak(15);
-    pdf.setFont('helvetica', 'bold');
+    pdf.setFont(font, 'bold');
     pdf.setFontSize(14);
     pdf.text(title.toUpperCase(), margin, yPosition);
     
@@ -49,7 +50,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
   };
 
   // Header - Name
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont(font, 'bold');
   pdf.setFontSize(22);
   const name = personalInfo.name || 'Your Name';
   const nameWidth = pdf.getTextWidth(name);
@@ -57,7 +58,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
   yPosition += 8;
 
   // Contact info
-  pdf.setFont('helvetica', 'normal');
+  pdf.setFont(font, 'normal');
   pdf.setFontSize(10);
   
   const contactParts = [];
@@ -107,7 +108,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       
       checkPageBreak(20);
       
-      pdf.setFont('helvetica', 'bold');
+      pdf.setFont(font, 'bold');
       pdf.setFontSize(11);
       pdf.text(edu.institution, margin, yPosition);
       
@@ -117,7 +118,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       }
       yPosition += lineHeight;
       
-      pdf.setFont('helvetica', 'italic');
+      pdf.setFont(font, 'italic');
       pdf.setFontSize(10);
       if (edu.degree) {
         pdf.text(edu.degree, margin, yPosition);
@@ -141,7 +142,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       
       checkPageBreak(25);
       
-      pdf.setFont('helvetica', 'bold');
+      pdf.setFont(font, 'bold');
       pdf.setFontSize(11);
       pdf.text(exp.position, margin, yPosition);
       
@@ -151,7 +152,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       }
       yPosition += lineHeight;
       
-      pdf.setFont('helvetica', 'italic');
+      pdf.setFont(font, 'italic');
       pdf.setFontSize(10);
       if (exp.company) {
         pdf.text(exp.company, margin, yPosition);
@@ -163,7 +164,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       }
       yPosition += lineHeight + 1;
       
-      pdf.setFont('helvetica', 'normal');
+      pdf.setFont(font, 'normal');
       pdf.setFontSize(10);
       exp.bullets.forEach((bullet) => {
         if (bullet.trim()) {
@@ -189,7 +190,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       
       checkPageBreak(25);
       
-      pdf.setFont('helvetica', 'bold');
+      pdf.setFont(font, 'bold');
       pdf.setFontSize(11);
       const projectTitle = project.technologies ? 
         `${project.name} | ${project.technologies}` : 
@@ -202,7 +203,7 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       }
       yPosition += lineHeight + 1;
       
-      pdf.setFont('helvetica', 'normal');
+      pdf.setFont(font, 'normal');
       pdf.setFontSize(10);
       project.bullets.forEach((bullet) => {
         if (bullet.trim()) {
@@ -233,12 +234,12 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
     if (category.value) {
       checkPageBreak(8);
       
-      pdf.setFont('helvetica', 'bold');
+      pdf.setFont(font, 'bold');
       pdf.setFontSize(10);
       const labelText = `${category.label}: `;
       pdf.text(labelText, margin, yPosition);
       
-      pdf.setFont('helvetica', 'normal');
+      pdf.setFont(font, 'normal');
       const labelWidth = pdf.getTextWidth(labelText);
       const valueLines = pdf.splitTextToSize(category.value, contentWidth - labelWidth);
       
@@ -264,13 +265,13 @@ const generateDirectPDF = (resumeData: ResumeData, filename: string) => {
       
       checkPageBreak(8);
       
-      pdf.setFont('helvetica', 'bold');
+      pdf.setFont(font, 'bold');
       pdf.setFontSize(10);
       const titleText = `${award.title}: `;
       pdf.text(titleText, margin, yPosition);
       
       if (award.description) {
-        pdf.setFont('helvetica', 'normal');
+        pdf.setFont(font, 'normal');
         const titleWidth = pdf.getTextWidth(titleText);
         const descLines = pdf.splitTextToSize(award.description, contentWidth - titleWidth);
         
